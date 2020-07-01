@@ -28,3 +28,4 @@ Route.get('user/categories', 'UserCategoryController.index').middleware([
 ])
 
 Route.get('categories', 'CategoryController.index')
+Route.get('books', 'BookController.index').middleware(['auth'])
