@@ -1,24 +1,15 @@
 'use strict'
 
-const graphql = use('App/Services/graphql')
+const { graphql, queries } = use('App/Services/GraphQL')
 
 class CategoryController {
   async index({ request, response }) {
     const { data } = await graphql.post('/', {
-      query: `query {
-        me {
-          reader {
-            categories {
-              name
-              slug
-            }
-          }
-        }
-      }`,
+      query: queries.CATEGORIES,
     })
 
     const { categories } = data.data.me.reader
-    return response.json({ total: categories.length, categories: categories })
+    return response.json({ total: categories.length, categories })
   }
 }
 
