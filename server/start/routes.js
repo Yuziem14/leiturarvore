@@ -30,3 +30,5 @@ Route.get('user/categories', 'UserCategoryController.index').middleware([
 Route.get('categories', 'CategoryController.index')
 Route.get('books', 'BookController.index').middleware(['auth'])
 Route.get('books/:slug', 'BookController.show').middleware(['auth'])
+Route.get('search/:searchTerm', 'BookController.search').middleware(['auth'])
+Route.get('/viewed-books', 'BookController.viewed').middleware(['auth'])

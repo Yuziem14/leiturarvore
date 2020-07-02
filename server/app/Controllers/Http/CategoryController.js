@@ -3,7 +3,7 @@
 const { graphql, queries } = use('App/Services/GraphQL')
 
 class CategoryController {
-  async index({ request, response }) {
+  async index({ response }) {
     const { data } = await graphql.post('/', {
       query: queries.CATEGORIES,
     })
