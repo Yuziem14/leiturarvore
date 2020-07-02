@@ -32,4 +32,49 @@ module.exports = {
     }
   }
   `,
+  BOOK: `${BOOK_FRAGMENT}
+
+  query Book($slug: String!) {
+    bookDetails(slug: $slug) {
+      ...bookNavigationFields
+      bookCharacteristic {
+        characteristic {
+          name
+          __typename
+        }
+        __typename
+      }
+      bookTheme {
+        theme {
+          name
+          __typename
+        }
+          __typename
+       }
+      bookCategory {
+        category {
+          name
+          __typename
+        }
+      }
+      bookDegree {
+        degree
+        __typename
+      }
+      language
+      publisher {
+        name
+        __typename
+      }
+      imprint
+      readingLevel
+      series
+      subtitle
+      edition
+      publicationYear
+      note
+      __typename
+    }
+  }
+  `,
 }

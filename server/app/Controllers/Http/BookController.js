@@ -21,6 +21,19 @@ class BookController {
 
     return response.json({ books, total: books.length, category, page })
   }
+
+  async show({ params, request, response }) {
+    const { slug } = params || ''
+
+    const { data } = await graphql.post('/', {
+      query: queries.BOOK,
+      variables: { slug },
+    })
+
+    const { bookDetails } = data.data
+
+    response.json({ book: bookDetails })
+  }
 }
 
 module.exports = BookController
