@@ -1,5 +1,7 @@
 'use strict'
 
+const Env = use('Env')
+const Book = use('App/Models/Book')
 const { graphql, queries } = use('App/Services/GraphQL')
 
 class BookController {
@@ -16,6 +18,19 @@ class BookController {
     const { books } = data.data.search
 
     return { total: books.length, books, category: searchTerm, page, opts }
+  }
+
+  async _availableOffline(params = null) {
+    const books = await Book.all()
+
+    const API_URL = `http://${Env.get('IP_ADDRESS')}:${Env.get('PORT')}`
+    const serializedBooks = books.toJSON().map(book => ({
+      ...book,
+      book_url: `${API_URL}${book.book_url}`,
+      cover_image: `${API_URL}${book.cover_image}`,
+    }))
+
+    return { total: serializedBooks.length, books: serializedBooks }
   }
 
   async _search({ searchTerm, page, opts }) {
