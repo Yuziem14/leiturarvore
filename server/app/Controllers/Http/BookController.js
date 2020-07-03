@@ -3,64 +3,71 @@
 const { graphql, queries } = use('App/Services/GraphQL')
 
 class BookController {
-  async index({ request, response }) {
-    const { category } = request.get('category') || ' '
-    const { opts } = request.get('opts') || ''
-    const { page } = request.get('page')
-
+  async _category({ searchTerm, page, opts }) {
     const { data } = await graphql.post('/', {
       query: queries.BOOKS,
       variables: {
-        searchTerm: category,
+        searchTerm: searchTerm || '',
         page: Number(page) || 1,
-        opts,
+        opts: opts || '',
       },
     })
 
     const { books } = data.data.search
 
-    return response.json({ books, total: books.length, category, page })
+    return { total: books.length, books, category: searchTerm, page, opts }
   }
 
-  async show({ params, request, response }) {
-    const { slug } = params || ''
-
-    const { data } = await graphql.post('/', {
-      query: queries.BOOK,
-      variables: { slug },
-    })
-
-    const { bookDetails } = data.data
-
-    response.json({ book: bookDetails })
-  }
-
-  async search({ params, request, response }) {
-    const searchTerm = params.searchTerm || ''
-    const { opts } = request.get('opts') || ''
-    const { page } = request.get('page')
-    console.log(searchTerm)
+  async _search({ searchTerm, page, opts }) {
     const { data } = await graphql.post('/', {
       query: queries.SEARCH,
       variables: {
-        searchTerm,
+        searchTerm: decodeURIComponent(searchTerm) || '',
         page: Number(page) || 1,
-        opts,
+        opts: opts || '',
       },
     })
 
-    const items = data.data.searchBook.books
+    const { books } = data.data.search
 
-    return response.json({ total: items.length, opts, page, items })
+    return { total: books.length, books, search: searchTerm, page, opts }
   }
 
-  async viewed({ response }) {
+  async _viewed(params = null) {
     const { data } = await graphql.post('/', {
       query: queries.VIEWED_BOOKS,
     })
 
     const { viewedBooks } = data.data.me.reader
-    return response.json({ total: viewedBooks.length, viewedBooks })
+
+    return { total: viewedBooks.length, books: viewedBooks }
+  }
+
+  async index({ request, response }) {
+    const { searchTerm, page, opts, filter } = request.all()
+
+    if (typeof this[`_${filter}`] !== 'function') {
+      return response
+        .status(400)
+        .json({ error: { message: `filter '${filter}' is not valid` } })
+    }
+
+    const data = await this[`_${filter}`]({ searchTerm, page, opts })
+
+    return response.json(data)
+  }
+
+  async show({ params, request, response }) {
+    const { slug } = params
+
+    const { data } = await graphql.post('/', {
+      query: queries.BOOK,
+      variables: { slug: slug || '' },
+    })
+
+    const { bookDetails } = data.data
+
+    response.json({ book: bookDetails })
   }
 }
 
