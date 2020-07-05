@@ -5,8 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function BookList({ title, books }) {
   const navigation = useNavigation();
-  function handleSelectBook(slug) {
-    navigation.navigate('BookDetails', { slug });
+
+  function handleSelectBook({ slug, url }) {
+    navigation.navigate('BookDetails', { slug, url });
   }
 
   return (
@@ -21,7 +22,12 @@ export default function BookList({ title, books }) {
           return (
             <BookWrapper
               activeOpacity={0.8}
-              onPress={() => handleSelectBook(book.slug)}
+              onPress={() =>
+                handleSelectBook({
+                  slug: book.slug,
+                  url: book.book_url || null,
+                })
+              }
             >
               <Book source={{ uri: book.imageUrlThumb || book.cover_image }} />
             </BookWrapper>

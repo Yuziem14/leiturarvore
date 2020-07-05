@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView } from 'react-native';
 import { Feather, FontAwesome5 } from '@expo/vector-icons';
+
 import {
   Container,
   Main,
@@ -29,7 +30,7 @@ const languages = {
 };
 
 export default function BookDetails({ route }) {
-  const { slug } = route.params;
+  const { slug, url } = route.params;
 
   const [book, setBook] = useState(null);
 
@@ -120,16 +121,18 @@ export default function BookDetails({ route }) {
             <Description>Características:</Description>
             <InfoText>{book.characteristics.join(' - ')}</InfoText>
           </InfoBox>
-          <Actions>
-            <Button>
-              <FontAwesome5 name="readme" size={24} color="#fff" />
-              <ButtonText>Ler</ButtonText>
-            </Button>
-            <Button>
-              <Feather name="download" size={24} color="#fff" />
-              <ButtonText>Download</ButtonText>
-            </Button>
-          </Actions>
+          {url && (
+            <Actions>
+              <Button>
+                <FontAwesome5 name="readme" size={24} color="#fff" />
+                <ButtonText>Ler</ButtonText>
+              </Button>
+              <Button>
+                <Feather name="download" size={24} color="#fff" />
+                <ButtonText>Download</ButtonText>
+              </Button>
+            </Actions>
+          )}
         </ScrollView>
       </Main>
     </Container>
