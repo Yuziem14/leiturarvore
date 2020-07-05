@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import {
   Container,
   Header,
@@ -8,18 +8,16 @@ import {
   Input,
   Button,
   BooksContainer,
-  BookSection,
-  SectionTitle,
-  BookWrapper,
-  Book,
 } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
+
+import BookList from '../../components/BookList';
 import { useAuth } from '../../contexts/auth';
 import api from '../../services/api';
 
 import logo from '../../assets/logo.png';
 
-export default function Home() {
+export default function Home({ navigation }) {
   const { user } = useAuth();
   const [books, setBooks] = useState(null);
 
@@ -55,23 +53,6 @@ export default function Home() {
     if (!books) _loadBooks();
   }, []);
 
-  function renderItem({ item }) {
-    return (
-      <BookWrapper activeOpacity={0.7}>
-        <Book
-          resizeMode="cover"
-          source={{
-            uri: item.imageUrlThumb || item.book.imageUrlThumb,
-          }}
-        />
-      </BookWrapper>
-    );
-  }
-
-  function keyExtractor(item, index) {
-    return `${item.slug}:${index}`;
-  }
-
   return (
     <Container>
       <Header>
@@ -89,17 +70,12 @@ export default function Home() {
       <BooksContainer>
         <ScrollView>
           {books &&
-            books.map(data => (
-              <BookSection>
-                <SectionTitle>{data.title}</SectionTitle>
-                <FlatList
-                  data={data.books}
-                  renderItem={renderItem}
-                  keyExtractor={keyExtractor}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                />
-              </BookSection>
+            books.map((bookSection, index) => (
+              <BookList
+                key={index}
+                title={bookSection.title}
+                books={bookSection.books}
+              />
             ))}
         </ScrollView>
       </BooksContainer>

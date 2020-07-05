@@ -10,8 +10,8 @@ export const Header = styled.View`
 `;
 
 export const Logo = styled.Image`
-  width: 64px;
-  height: 56px;
+  width: 80px;
+  height: 72px;
 `;
 
 export const Search = styled.View`
@@ -20,7 +20,7 @@ export const Search = styled.View`
   align-items: center;
   justify-content: space-between;
   background: #fff;
-  margin-top: 8px;
+  margin-top: 24px;
 `;
 
 export const Input = styled.TextInput`

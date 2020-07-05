@@ -7,12 +7,13 @@ const Tab = createBottomTabNavigator();
 const Icons = {
   Home: ['home-outline', 'home'],
   Categories: ['apps', 'apps-box'],
-  Downloads: ['cloud-download', 'cloud-download-outline'],
-  Perfil: ['account', 'account-check'],
+  Offline: ['cloud-download', 'cloud-download-outline'],
+  Profile: ['account', 'account-check'],
+  BookDetails: ['book', 'book-outline'],
 };
 
-import Home from '../screens/Home';
-import AppLoading from '../components/AppLoading';
+import Profile from '../screens/Profile';
+import { CategoriesStack, HomeStack, OfflineStack } from './app.stacks';
 
 export default function AppRoutes() {
   return (
@@ -37,15 +38,19 @@ export default function AppRoutes() {
       <Tab.Screen
         name="Home"
         options={{ tabBarLabel: 'Início' }}
-        component={Home}
+        component={HomeStack}
       />
       <Tab.Screen
         name="Categories"
         options={{ tabBarLabel: 'Categorias' }}
-        component={AppLoading}
+        component={CategoriesStack}
       />
-      <Tab.Screen name="Downloads" component={AppLoading} />
-      <Tab.Screen name="Perfil" component={AppLoading} />
+      <Tab.Screen name="Offline" component={OfflineStack} />
+      <Tab.Screen
+        name="Profile"
+        options={{ tabBarLabel: 'Perfil' }}
+        component={Profile}
+      />
     </Tab.Navigator>
   );
 }
