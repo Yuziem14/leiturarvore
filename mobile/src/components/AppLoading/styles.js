@@ -4,4 +4,5 @@ import { GlobalContainer } from '../../globalStyles';
 export const Container = styled(GlobalContainer)`
   align-items: center;
   justify-content: center;
+  background-color: ${props => props.backgroundColor};
 `;
