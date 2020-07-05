@@ -119,21 +119,25 @@ class BookSeeder {
       {
         name: 'Sai fora, coronavírus!',
         slug: 'sai-fora-coronavirus',
+        cover_image: `${staticURL}/sai-fora-coronavirus.jpg`,
         book_url: `${staticURL}/sai-fora-coronavirus.pdf`,
       },
       {
         name: 'Cabelo bom é o que?',
         slug: 'cabelo-bom-o-que-e',
+        cover_image: `${staticURL}/cabelo-bom-o-que-e.jpg`,
         book_url: `${staticURL}/cabelo-bom-o-que-e.pdf`,
       },
       {
         name: 'Mínimos contos - suspense em 140 caracteres',
         slug: 'minimos-contos',
+        cover_image: `${staticURL}/minimos-contos.jpg`,
         book_url: `${staticURL}/minimos-contos.pdf`,
       },
       {
         name: 'O devaneio no jardim',
         slug: 'o-devaneio-no-jardim',
+        cover_image: `${staticURL}/o-devaneio-no-jardim.jpg`,
         book_url: `${staticURL}/o-devaneio-no-jardim.pdf`,
       },
     ]
