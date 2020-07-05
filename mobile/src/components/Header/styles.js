@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.View`
-  padding: 32px 0px 32px 16px;
+  padding: 32px 16px 32px 16px;
 `;
 
 export const LogoArea = styled.View`

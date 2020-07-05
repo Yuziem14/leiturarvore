@@ -23,7 +23,7 @@ export default function BookList({ title, books }) {
               activeOpacity={0.8}
               onPress={() => handleSelectBook(book.slug)}
             >
-              <Book source={{ uri: book.imageUrlThumb }} />
+              <Book source={{ uri: book.imageUrlThumb || book.cover_image }} />
             </BookWrapper>
           );
         }}

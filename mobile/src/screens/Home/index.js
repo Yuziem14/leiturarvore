@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView } from 'react-native';
-import {
-  Container,
-  Header,
-  Logo,
-  Search,
-  Input,
-  Button,
-  BooksContainer,
-} from './styles';
+import { Container, Search, Input, Button, BooksContainer } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import BookList from '../../components/BookList';
+import Header from '../../components/Header';
+
 import { useAuth } from '../../contexts/auth';
 import api from '../../services/api';
-
-import logo from '../../assets/logo.png';
 
 export default function Home({ navigation }) {
   const { user } = useAuth();
@@ -23,10 +15,15 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     async function _loadBooks() {
-      const [viewed, ...byCategories] = await Promise.all([
+      const [viewed, offline, ...byCategories] = await Promise.all([
         api.get('books', {
           params: {
             filter: 'viewed',
+          },
+        }),
+        api.get('books', {
+          params: {
+            filter: 'availableOffline',
           },
         }),
         ...user.categories.map(category => {
@@ -40,23 +37,26 @@ export default function Home({ navigation }) {
       ]);
 
       const serializedBooks = [
-        { title: 'Continuar lendo...', books: viewed.data.books },
+        {
+          title: 'Continuar lendo...',
+          books: [...offline.data.books, ...viewed.data.books],
+        },
         ...byCategories.map(({ data }) => ({
           title: `Livros sobre ${data.category}...`,
           books: data.books,
         })),
       ];
+      console.log(serializedBooks[0]);
 
       setBooks(serializedBooks);
     }
 
-    if (!books) _loadBooks();
+    _loadBooks();
   }, []);
 
   return (
     <Container>
       <Header>
-        <Logo source={logo} resizeMode="contain" />
         <Search>
           <Input
             placeholderTextColor="#666"
