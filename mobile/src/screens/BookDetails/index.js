@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Linking } from 'react-native';
 import { Feather, FontAwesome5 } from '@expo/vector-icons';
 
 import {
@@ -33,6 +33,10 @@ export default function BookDetails({ route }) {
   const { slug, url } = route.params;
 
   const [book, setBook] = useState(null);
+
+  function openBook() {
+    Linking.openURL(url);
+  }
 
   function _serializeBook({ book }) {
     const categories = book.bookCategory.map(({ category }) => category.name);
@@ -123,7 +127,7 @@ export default function BookDetails({ route }) {
           </InfoBox>
           {url && (
             <Actions>
-              <Button>
+              <Button onPress={() => openBook(url)}>
                 <FontAwesome5 name="readme" size={24} color="#fff" />
                 <ButtonText>Ler</ButtonText>
               </Button>

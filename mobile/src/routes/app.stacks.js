@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screens/Home';
 import Categories from './category.routes';
 import BookDetails from '../screens/BookDetails';
-import AppLoading from '../components/AppLoading';
+import Offline from '../screens/Offline';
 
 function _createStack(name, component) {
   const Stack = createStackNavigator();
@@ -14,11 +14,12 @@ function _createStack(name, component) {
       <Stack.Navigator headerMode={false}>
         <Stack.Screen name={name} component={component} />
         <Stack.Screen name="BookDetails" component={BookDetails} />
+        {/* <Stack.Screen name="Modal" component={Modal} /> */}
       </Stack.Navigator>
     );
   };
 }
 
 export const HomeStack = _createStack('Home', Home);
-export const OfflineStack = _createStack('Offline', AppLoading);
+export const OfflineStack = _createStack('Offline', Offline);
 export const CategoriesStack = Categories;
