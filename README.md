@@ -19,14 +19,14 @@
 #### [Read the portuguese version.](./.github/README-pt.md)
 
 # :pushpin: Table of Contents
-- [Features]()
-- [Requirements]()
-- [Installation]()
-- [Quick Start]()
-- [Technologies]()
-- [Team 62]()
-- [Contributing]()
-- [License]()
+- [Features](#bulb-features)
+- [Requirements](#construction-requirements)
+- [Installation](#white_check_mark-installation)
+- [Quick Start](#rocket-quick-start)
+- [Technologies](#fire-technologies)
+- [Team 62](#pray-team-62)
+- [Contributing](#robot-contributing)
+- [License](#scroll-license)
 
 # :bulb: Features
 - [X] :sunglasses: User Registration
