@@ -15,10 +15,15 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.leiturarvore"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "android": {
+      "package": "com.leiturarvore"
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }
