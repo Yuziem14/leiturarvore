@@ -8,13 +8,11 @@ import Offline from '../screens/Offline';
 
 function _createStack(name, component) {
   const Stack = createStackNavigator();
-
   return function () {
     return (
       <Stack.Navigator headerMode={false}>
         <Stack.Screen name={name} component={component} />
         <Stack.Screen name="BookDetails" component={BookDetails} />
-        {/* <Stack.Screen name="Modal" component={Modal} /> */}
       </Stack.Navigator>
     );
   };

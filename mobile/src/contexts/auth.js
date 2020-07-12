@@ -25,7 +25,6 @@ export function AuthProvider({ children }) {
 
   async function signIn(email, password) {
     const data = await authService.login(email, password);
-    console.log(data);
     await AsyncStorage.multiSet([
       [TOKEN_KEY, data.token],
       [REFRESH_TOKEN_KEY, data.refreshToken],

@@ -2,8 +2,6 @@ import api from './api';
 
 async function _getProfile() {
   const { data: user } = await api.get('profile');
-  console.log(user);
-
   return user;
 }
 
