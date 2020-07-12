@@ -1,35 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { WebView } from 'react-native-webview';
-import StaticServer from 'react-native-static-server';
+import React from 'react';
 
-import AppLoading from '../../components/AppLoading';
-import { getPath, moveAndroidFiles } from '../../services/static';
+import PdfReader from '../../components/PDFReader';
+import EpubReader from '../../components/EpubReader';
 import { Container } from './styles';
 
-const PORT = 5560;
-
 export default function Read({ route, navigation }) {
-  const [baseUrl, setBaseUrl] = useState('');
-  const { url: bookPath } = route.params;
-
-  useEffect(() => {
-    let server = null;
-    async function startServer() {
-      await moveAndroidFiles();
-      server = new StaticServer(PORT, getPath(), { localOnly: true });
-      const serverUrl = await server.start();
-      setBaseUrl(serverUrl);
-    }
-
-    startServer();
-    return () => server && server.stop();
-  }, []);
-
-  if (!baseUrl) return <AppLoading />;
+  const { url: bookUri } = route.params;
+  const isEpub = new RegExp(/.epub/).test(bookUri);
 
   return (
     <Container>
-      <WebView source={{ uri: `${baseUrl}/?path=${bookPath}` }} />
+      {isEpub ? (
+        <EpubReader sourceUri={bookUri} />
+      ) : (
+        <PdfReader sourceUri={bookUri} />
+      )}
     </Container>
   );
 }
