@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { GlobalContainer } from '../../../globalStyles';
 import {
   Container,
   Logo,
@@ -39,36 +38,37 @@ export default function Form({ route, navigation }) {
   }
 
   return (
-    <GlobalContainer>
-      <Container>
-        <Logo source={logo} />
+    <Container>
+      <Logo source={logo} />
 
-        <Input
-          placeholder="Nome de usuário"
-          autoCapitalize="words"
-          onChangeText={handleNameChange}
-          value={name}
-        />
-        <Input
-          placeholder="Email"
-          onChangeText={handleEmailChange}
-          value={email}
-        />
-        <Input
-          placeholder="Senha"
-          secureTextEntry
-          onChangeText={handlePasswordChange}
-          value={password}
-        />
+      <Input
+        placeholderTextColor="#fff"
+        placeholder="Nome de usuário"
+        autoCapitalize="words"
+        onChangeText={handleNameChange}
+        value={name}
+      />
+      <Input
+        placeholderTextColor="#fff"
+        placeholder="Email"
+        onChangeText={handleEmailChange}
+        value={email}
+      />
+      <Input
+        placeholderTextColor="#fff"
+        placeholder="Senha"
+        secureTextEntry
+        onChangeText={handlePasswordChange}
+        value={password}
+      />
 
-        <Button activeOpacity={0.7} onPress={goToCategories}>
-          <TextButton>Registrar-se</TextButton>
-        </Button>
+      <Button activeOpacity={0.7} onPress={goToCategories}>
+        <TextButton>Registrar-se</TextButton>
+      </Button>
 
-        <Login onPress={goToLogin}>
-          Já tem uma conta? <LoginBold>Faça o login</LoginBold>
-        </Login>
-      </Container>
-    </GlobalContainer>
+      <Login onPress={goToLogin}>
+        Já tem uma conta? <LoginBold>Faça o login</LoginBold>
+      </Login>
+    </Container>
   );
 }

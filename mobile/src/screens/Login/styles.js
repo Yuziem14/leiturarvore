@@ -1,11 +1,14 @@
 import styled from 'styled-components/native';
+import { GlobalContainer } from '../../globalStyles';
+
+export { FormInput as Input } from '../../globalStyles';
 
 const _Text = styled.Text`
   font-size: 14px;
   color: #fff;
 `;
 
-export const Container = styled.View`
+export const Container = styled(GlobalContainer)`
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -14,17 +17,6 @@ export const Container = styled.View`
 
 export const Logo = styled.Image`
   margin-bottom: 20px;
-`;
-
-export const Input = styled.TextInput`
-  width: 100%;
-  height: 60px;
-  font-size: 14px;
-  color: #fff;
-  border: #fff 2px solid;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  padding-left: 15px;
 `;
 
 export const Actions = styled.View`

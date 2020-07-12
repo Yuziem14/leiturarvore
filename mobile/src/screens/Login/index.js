@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { GlobalContainer } from '../../globalStyles';
 import {
   Container,
   Logo,
@@ -33,40 +32,36 @@ export default function Login({ navigation }) {
   }
 
   function handleSignIn() {
-    signIn(email, password)
-      .then(isAuthenticated => {
-        console.log('user signed in');
-      })
-      .catch(err => console.log(err));
+    signIn(email, password).catch(err => console.log(err));
   }
 
   return (
-    <GlobalContainer>
-      <Container>
-        <Logo source={logo} />
+    <Container>
+      <Logo source={logo} />
 
-        <Input
-          placeholder="Email"
-          onChangeText={handleEmailChange}
-          value={email}
-        />
-        <Input
-          placeholder="Senha"
-          secureTextEntry
-          onChangeText={handlePasswordChange}
-          value={password}
-        />
+      <Input
+        placeholderTextColor="#fff"
+        placeholder="Email"
+        onChangeText={handleEmailChange}
+        value={email}
+      />
+      <Input
+        placeholderTextColor="#fff"
+        placeholder="Senha"
+        secureTextEntry
+        onChangeText={handlePasswordChange}
+        value={password}
+      />
 
-        <Actions>
-          <Forgot>Esqueceu a senha?</Forgot>
-          <Button onPress={handleSignIn}>
-            <TextButton>Entrar</TextButton>
-          </Button>
-        </Actions>
-        <Register onPress={() => handleRegister()}>
-          Ainda não tem uma conta? <RegisterBold>Registre-se</RegisterBold>
-        </Register>
-      </Container>
-    </GlobalContainer>
+      <Actions>
+        <Forgot>Esqueceu a senha?</Forgot>
+        <Button onPress={handleSignIn}>
+          <TextButton>Entrar</TextButton>
+        </Button>
+      </Actions>
+      <Register onPress={() => handleRegister()}>
+        Ainda não tem uma conta? <RegisterBold>Registre-se</RegisterBold>
+      </Register>
+    </Container>
   );
 }

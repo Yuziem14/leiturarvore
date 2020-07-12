@@ -1,20 +1,9 @@
 import styled from 'styled-components/native';
-import { GlobalContainer } from '../../globalStyles';
+import { Main as GlobalMain } from '../../globalStyles';
 
-export const Container = styled(GlobalContainer)``;
+export { GlobalContainer as Container, Logo } from '../../globalStyles';
 
-export const Header = styled.View`
-  padding: 32px 0px 32px 16px;
-`;
-
-export const Logo = styled.Image`
-  width: 88px;
-  height: 72px;
-`;
-
-export const Main = styled(GlobalContainer)`
-  border-top-right-radius: 30px;
-  background-color: #fff;
+export const Main = styled(GlobalMain)`
   padding: 16px 0px 8px 16px;
 `;
 

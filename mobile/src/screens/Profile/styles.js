@@ -1,15 +1,14 @@
 import styled from 'styled-components/native';
-import { GlobalContainer } from '../../globalStyles';
+import { Main as GlobalMain } from '../../globalStyles';
 
-export const Container = styled(GlobalContainer)``;
+export { GlobalContainer as Container } from '../../globalStyles';
 
 export const Header = styled.View`
   padding: 64px 0px 32px 32px;
 `;
 
-export const Main = styled(GlobalContainer)`
-  border-top-right-radius: 30px;
-  background-color: #fff;
+export const Main = styled(GlobalMain)`
+  align-items: flex-start;
   padding: 16px 0px 8px 32px;
 `;
 
@@ -21,6 +20,7 @@ export const Title = styled.Text`
 `;
 
 export const ProfileContainer = styled.View`
+  width: 100%;
   justify-content: space-around;
   border-style: solid;
   border-left-width: 2px;
@@ -56,5 +56,5 @@ export const Actions = styled.View`
 export const Separator = styled.View`
   height: 2px;
   width: 80%;
-  background-color: #666666;
+  background-color: #666;
 `;

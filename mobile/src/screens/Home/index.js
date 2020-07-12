@@ -3,13 +3,13 @@ import { ScrollView } from 'react-native';
 import { Container, Search, Input, Button, BooksContainer } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 
-import BookList from '../../components/BookList';
 import Header from '../../components/Header';
+import BookList from '../../components/BookList';
 
-import { useAuth } from '../../contexts/auth';
 import api from '../../services/api';
+import { useAuth } from '../../contexts/auth';
 
-export default function Home({ navigation }) {
+export default function Home() {
   const { user } = useAuth();
   const [books, setBooks] = useState(null);
 
@@ -27,7 +27,7 @@ export default function Home({ navigation }) {
           },
         }),
         ...user.categories.map(category => {
-          return api.get('/books', {
+          return api.get('books', {
             params: {
               filter: 'category',
               searchTerm: category.name,
@@ -46,7 +46,6 @@ export default function Home({ navigation }) {
           books: data.books,
         })),
       ];
-      console.log(serializedBooks[0]);
 
       setBooks(serializedBooks);
     }

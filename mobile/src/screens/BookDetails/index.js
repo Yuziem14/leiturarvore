@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Linking } from 'react-native';
+import { ScrollView } from 'react-native';
 import { Feather, FontAwesome5 } from '@expo/vector-icons';
 
 import {
@@ -29,13 +29,13 @@ const languages = {
   en: 'Inglês',
 };
 
-export default function BookDetails({ route }) {
+export default function BookDetails({ route, navigation }) {
   const { slug, url } = route.params;
 
   const [book, setBook] = useState(null);
 
   function openBook() {
-    Linking.openURL(url);
+    navigation.navigate('Read', { url });
   }
 
   function _serializeBook({ book }) {
@@ -63,7 +63,6 @@ export default function BookDetails({ route }) {
     async function _loadBook() {
       const { data } = await api.get(`books/${slug}`);
       const serializedBook = _serializeBook(data);
-      console.log(serializedBook);
       setBook(serializedBook);
     }
 

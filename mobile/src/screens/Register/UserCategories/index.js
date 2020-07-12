@@ -33,7 +33,6 @@ export default function UserCategories({ route, navigation }) {
     api
       .post('auth/register', { ...formData, categories: selectedCategories })
       .then(response => {
-        console.log(response);
         navigation.navigate('Login');
       });
   }

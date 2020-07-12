@@ -2,20 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
 import {
   Container,
-  Header,
   Title,
   Main,
   CategoryContainer,
   CategoryName,
 } from '../styles';
+import Header from '../../../components/Header';
 import api from '../../../services/api';
 
 export default function Categories({ navigation }) {
   const [categories, setCategories] = useState([]);
 
   function handleSelectedCategory(category) {
-    console.log(category);
-    console.log(navigation);
     navigation.navigate('Results', { category });
   }
 
@@ -27,7 +25,7 @@ export default function Categories({ navigation }) {
 
   return (
     <Container>
-      <Header>
+      <Header showLogo={false}>
         <Title>Categorias</Title>
       </Header>
       <Main>

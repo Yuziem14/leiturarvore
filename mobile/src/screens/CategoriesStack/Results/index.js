@@ -5,8 +5,6 @@ import api from '../../../services/api';
 import BookList from '../../../components/BookList';
 import Header from '../../../components/Header';
 
-import logo from '../../../assets/logo.png';
-
 export default function Results({ route }) {
   const { category } = route.params;
   const [books, setBooks] = useState({});

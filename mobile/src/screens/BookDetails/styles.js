@@ -1,19 +1,10 @@
 import styled from 'styled-components/native';
-import { GlobalContainer } from '../../globalStyles';
+export { GlobalContainer as Container, Main } from '../../globalStyles';
 
 const _Text = styled.Text`
   font-size: 16px;
   font-weight: bold;
   color: #333;
-`;
-
-export const Container = styled(GlobalContainer)``;
-
-export const Main = styled(GlobalContainer)`
-  border-top-right-radius: 30px;
-  background-color: #fff;
-  padding: 32px 32px 0px 32px;
-  align-items: center;
 `;
 
 export const InfoBox = styled.View`
