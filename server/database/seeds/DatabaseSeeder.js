@@ -11,6 +11,8 @@
 */
 
 const ace = use('@adonisjs/ace')
+
+const CategorySeeder = require('./CategorySeeder')
 const BookSeeder = require('./BookSeeder')
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
@@ -20,6 +22,7 @@ class DatabaseSeeder {
   async run() {
     await ace.call('migration:refresh')
 
+    await new CategorySeeder().run()
     await new BookSeeder().run()
   }
 }
