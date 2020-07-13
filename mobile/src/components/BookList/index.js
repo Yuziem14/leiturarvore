@@ -17,6 +17,8 @@ export default function BookList({ title, books, children }) {
     navigation.navigate('BookDetails', { slug, url });
   }
 
+  if (books.length === 0) return <></>;
+
   return (
     <BookSection>
       <SectionTitle>{title}</SectionTitle>

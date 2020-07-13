@@ -50,12 +50,12 @@ export default function BookDetails({ route, navigation }) {
       author: book.author,
       sinopse: book.description,
       image: book.imageUrlIntermediaria,
-      edition: book.edition,
-      language: book.language,
+      edition: book.edition || 'Única',
+      language: languages[book.language] || book.language,
       publisher: book.publisher.name,
-      categories,
-      themes,
-      characteristics,
+      categories: categories.join(' - '),
+      themes: themes.join(' - '),
+      characteristics: themes.join(' - '),
     };
   }
 
@@ -99,7 +99,7 @@ export default function BookDetails({ route, navigation }) {
               <InfoSeparator>-</InfoSeparator>
               <InfoBox>
                 <Description>Edição:</Description>
-                <InfoText>{book.edition || 'Única'}</InfoText>
+                <InfoText>{book.edition}</InfoText>
               </InfoBox>
             </BasicInfo>
           </Panel>
@@ -110,19 +110,19 @@ export default function BookDetails({ route, navigation }) {
           <Separator />
           <InfoBox>
             <Description>Idioma:</Description>
-            <InfoText>{languages[book.language] || book.language}</InfoText>
+            <InfoText>{book.language}</InfoText>
           </InfoBox>
           <InfoBox>
             <Description>Categorias:</Description>
-            <InfoText>{book.categories.join(' - ')}</InfoText>
+            <InfoText>{book.categories}</InfoText>
           </InfoBox>
           <InfoBox>
             <Description>Temáticas:</Description>
-            <InfoText>{book.themes.join(' - ')}</InfoText>
+            <InfoText>{book.themes}</InfoText>
           </InfoBox>
           <InfoBox>
             <Description>Características:</Description>
-            <InfoText>{book.characteristics.join(' - ')}</InfoText>
+            <InfoText>{book.characteristics}</InfoText>
           </InfoBox>
           {url && (
             <Actions>
