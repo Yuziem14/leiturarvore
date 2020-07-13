@@ -17,6 +17,7 @@ export default function PDFReader({ sourceUri }) {
     <>
       <PDF
         style={PdfContainer}
+        enablePaging
         onLoadComplete={total => {
           setTotalPages(total);
           setIsLoading(false);
