@@ -3,9 +3,6 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model')
 
-/** @type {import('@adonisjs/framework/src/Hash')} */
-const Hash = use('Hash')
-
 class User extends Model {
   static boot() {
     super.boot()
@@ -14,15 +11,9 @@ class User extends Model {
      * A hook to hash the user password before saving
      * it to the database.
      */
-    this.addHook('beforeSave', async userInstance => {
-      if (userInstance.dirty.password) {
-        userInstance.password = await Hash.make(userInstance.password)
-      }
-    })
+    this.addHook('beforeSave', 'UserHook.hashPassword')
 
-    this.addHook('beforeDelete', async userInstance => {
-      await userInstance.categories().delete()
-    })
+    this.addHook('beforeDelete', 'UserHook.deleteRelations')
   }
 
   static get hidden() {
@@ -43,8 +34,16 @@ class User extends Model {
     return this.hasMany('App/Models/Token')
   }
 
+  books() {
+    return this.belongsToMany('App/Models/Book', 'user_id', 'book_id')
+      .pivotTable('downloads')
+      .withTimestamps()
+  }
+
   categories() {
-    return this.hasMany('App/Models/UserCategory')
+    return this.belongsToMany('App/Models/Category', 'user_id', 'category_id')
+      .pivotTable('user_categories')
+      .withTimestamps()
   }
 }
 
