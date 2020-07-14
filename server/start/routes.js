@@ -28,3 +28,9 @@ Route.get('/profile', 'Auth/ProfileController.index').middleware(['auth'])
 Route.get('categories', 'CategoryController.index')
 Route.get('books', 'BookController.index').middleware(['auth'])
 Route.get('books/:slug', 'BookController.show').middleware(['auth'])
+
+Route.get('downloads', 'DownloadController.index').middleware(['auth'])
+Route.post('downloads', 'DownloadController.store').middleware(['auth'])
+Route.delete('downloads/:slug', 'DownloadController.destroy').middleware([
+  'auth',
+])
