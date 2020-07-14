@@ -2,11 +2,9 @@ const BOOK_FRAGMENT = `fragment bookNavigationFields on Book {
   name
   author
   slug
-  degree
   description
   imageUrlIntermediaria
   imageUrlThumb
-  __typename
 }`
 
 module.exports = {
@@ -28,40 +26,23 @@ module.exports = {
       bookCharacteristic {
         characteristic {
           name
-          __typename
         }
-        __typename
       }
       bookTheme {
         theme {
           name
-          __typename
         }
-          __typename
-       }
+      }
       bookCategory {
         category {
           name
-          __typename
         }
-      }
-      bookDegree {
-        degree
-        __typename
       }
       language
       publisher {
         name
-        __typename
       }
-      imprint
-      readingLevel
-      series
-      subtitle
       edition
-      publicationYear
-      note
-      __typename
     }
   }
   `,
@@ -71,9 +52,7 @@ module.exports = {
     search: searchCategoryV2(searchTerm: $searchTerm, page: $page, opts: $opts) {
       books {
           ...bookNavigationFields
-          __typename
       }
-      __typename
     }
   }
   `,
@@ -97,9 +76,7 @@ module.exports = {
     search: searchBookV2(searchTerm: $searchTerm, page: $page, opts: $opts) {
       books {
         ...bookNavigationFields
-        __typename
       }
-      __typename
     }
   }`,
 }

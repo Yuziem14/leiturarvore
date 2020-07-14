@@ -66,15 +66,18 @@ class BookController {
 
   async show({ params, request, response }) {
     const { slug } = params
+    const book = await Book.findBy('slug', slug)
 
-    const { data } = await graphql.post('/', {
-      query: queries.BOOK,
-      variables: { slug: slug || '' },
-    })
+    if (!book) {
+      const { data } = await graphql.post('/', {
+        query: queries.BOOK,
+        variables: { slug: slug || '' },
+      })
+      const { bookDetails } = data.data
+      return response.json({ book: bookDetails })
+    }
 
-    const { bookDetails } = data.data
-
-    response.json({ book: bookDetails })
+    return response.json({ book: book.toJSON(), origin: 'leiturarvore' })
   }
 }
 
