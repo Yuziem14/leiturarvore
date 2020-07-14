@@ -36,13 +36,11 @@ export default function BookList({ title, books, children }) {
                 onPress={() =>
                   handleSelectBook({
                     slug: book.slug,
-                    url: book.book_url || null,
+                    url: book.bookUrl || null,
                   })
                 }
               >
-                <Book
-                  source={{ uri: book.imageUrlThumb || book.cover_image }}
-                />
+                <Book source={{ uri: book.imageUrlThumb }} />
                 {React.Children.map(children, child => (
                   <ActionButton activeOpacity={0.8}>{child}</ActionButton>
                 ))}

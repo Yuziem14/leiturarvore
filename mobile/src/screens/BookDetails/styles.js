@@ -51,6 +51,11 @@ export const InfoSeparator = styled(_Text)`
   margin: 2px 0;
 `;
 
+export const InfoEnd = styled.View`
+  height: 0.1px;
+  margin: 4px 0;
+`;
+
 export const Separator = styled.View`
   width: 75%;
   height: 1px;

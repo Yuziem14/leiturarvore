@@ -11,6 +11,7 @@ import {
   BasicInfo,
   Title,
   InfoBox,
+  InfoEnd,
   Description,
   InfoText,
   InfoSeparator,
@@ -39,11 +40,21 @@ export default function BookDetails({ route, navigation }) {
   }
 
   function _serializeBook({ book }) {
-    const categories = book.bookCategory.map(({ category }) => category.name);
-    const themes = book.bookTheme.map(({ theme }) => theme.name);
-    const characteristics = book.bookCharacteristic.map(
-      ({ characteristic }) => characteristic.name
-    );
+    let categories = null;
+    let themes = null;
+    let characteristics = null;
+
+    if (!url) {
+      categories = book.bookCategory.map(({ category }) => category.name);
+      themes = book.bookTheme.map(({ theme }) => theme.name);
+      characteristics = book.bookCharacteristic.map(
+        ({ characteristic }) => characteristic.name
+      );
+    } else {
+      categories = book.categories;
+      themes = book.themes;
+      characteristics = book.characteristics;
+    }
 
     return {
       title: book.name,
@@ -55,7 +66,7 @@ export default function BookDetails({ route, navigation }) {
       publisher: book.publisher.name,
       categories: categories.join(' - '),
       themes: themes.join(' - '),
-      characteristics: themes.join(' - '),
+      characteristics: characteristics.join(' - '),
     };
   }
 
@@ -124,6 +135,7 @@ export default function BookDetails({ route, navigation }) {
             <Description>Características:</Description>
             <InfoText>{book.characteristics}</InfoText>
           </InfoBox>
+          <InfoEnd />
           {url && (
             <Actions>
               <Button onPress={() => openBook(url)}>
