@@ -81,13 +81,13 @@ export const Button = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  background: #220066;
+  background: ${props => props.backgroundColor || '#220066'};
   padding: 8px 16px;
   margin-bottom: 24px;
 `;
 
 export const ButtonText = styled(_Text)`
-  font-size: 24px;
+  font-size: 20px;
   color: #fff;
   margin-left: 8px;
 `;

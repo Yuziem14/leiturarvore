@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Main } from '../styles';
-import api from '../../../services/api';
 
+import { Container, Main } from '../styles';
 import BookList from '../../../components/BookList';
 import Header from '../../../components/Header';
+import * as bookApi from '../../../services/books.api';
 
 export default function Results({ route }) {
   const { category } = route.params;
@@ -11,18 +11,13 @@ export default function Results({ route }) {
 
   useEffect(() => {
     async function _loadBooks() {
-      const {
-        data: { books },
-      } = await api.get('books', {
-        params: {
-          filter: 'category',
-          searchTerm: category.name,
-        },
-      });
+      const { books: booksByCategory } = await bookApi.fetchBooksByCategory(
+        category.name
+      );
 
       setBooks({
         title: `Livros sobre ${category.name}...`,
-        books,
+        books: booksByCategory,
       });
     }
 

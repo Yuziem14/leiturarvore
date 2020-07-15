@@ -12,12 +12,11 @@ import {
 
 export default function BookList({ title, books, children }) {
   const navigation = useNavigation();
-
-  function handleSelectBook({ slug, url }) {
-    navigation.navigate('BookDetails', { slug, url });
+  function handleSelectBook(params) {
+    navigation.navigate('BookDetails', params);
   }
 
-  if (books.length === 0) return <></>;
+  if (!Array.isArray(books) || books.length === 0) return <></>;
 
   return (
     <BookSection>
@@ -26,9 +25,7 @@ export default function BookList({ title, books, children }) {
         data={books}
         horizontal
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => {
-          const book = item.book ? item.book : item;
-
+        renderItem={({ item: book }) => {
           return (
             <BookItem>
               <BookWrapper

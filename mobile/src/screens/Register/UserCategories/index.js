@@ -15,26 +15,35 @@ import {
 } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 
-import api from '../../../services/api';
+import { register } from '../../../services/auth';
+import * as categoriesApi from '../../../services/categories.api';
 
 export default function UserCategories({ route, navigation }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
-    api.get('categories').then(({ data }) => {
-      setCategories(data.categories);
-    });
+    async function _loadCategories() {
+      const data = await categoriesApi.fetchCategories();
+      setCategories(data);
+    }
+
+    try {
+      _loadCategories();
+    } catch (err) {
+      console.log('Fetching categories: ', err);
+    }
   }, []);
 
   async function handleRegisterSubmit() {
     const { formData } = route.params;
 
-    api
-      .post('auth/register', { ...formData, categories: selectedCategories })
-      .then(response => {
-        navigation.navigate('Login');
-      });
+    try {
+      await register(formData, selectedCategories);
+      navigation.navigate('Login');
+    } catch (err) {
+      console.log('Oops, cant register user: ', err);
+    }
   }
 
   function handleCategorySelector(category) {

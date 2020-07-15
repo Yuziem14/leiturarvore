@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Header from '../../components/Header';
 import BookList from '../../components/BookList';
 
-import api from '../../services/api';
+import * as bookApi from '../../services/books.api';
 import { useAuth } from '../../contexts/auth';
 
 export default function Home() {
@@ -16,41 +16,31 @@ export default function Home() {
   useEffect(() => {
     async function _loadBooks() {
       const [viewed, offline, ...byCategories] = await Promise.all([
-        api.get('books', {
-          params: {
-            filter: 'viewed',
-          },
-        }),
-        api.get('books', {
-          params: {
-            filter: 'availableOffline',
-          },
-        }),
-        ...user.categories.map(category => {
-          return api.get('books', {
-            params: {
-              filter: 'category',
-              searchTerm: category.name,
-            },
-          });
-        }),
+        bookApi.fetchViewedBooks(),
+        bookApi.fetchOfflineBooks(),
+        bookApi.fetchBooksByCategory(
+          user.categories.map(category => category.name)
+        ),
       ]);
 
-      const serializedBooks = [
+      const sectionBooks = [
         {
           title: 'Continuar lendo...',
-          books: [...offline.data.books, ...viewed.data.books],
+          books: [...offline, ...viewed],
         },
-        ...byCategories.map(({ data }) => ({
-          title: `Livros sobre ${data.category}...`,
-          books: data.books,
+        ...byCategories.flat().map(({ books, category }) => ({
+          title: `Livros sobre ${category}...`,
+          books: books,
         })),
       ];
 
-      setBooks(serializedBooks);
+      setBooks(sectionBooks);
     }
-
-    _loadBooks();
+    try {
+      _loadBooks();
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   return (

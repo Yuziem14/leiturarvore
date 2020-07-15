@@ -22,62 +22,27 @@ import {
 } from './styles';
 import Header from '../../components/Header';
 import AppLoading from '../../components/AppLoading';
-
-import api from '../../services/api';
-
-const languages = {
-  por: 'Português',
-  en: 'Inglês',
-};
+import * as bookApi from '../../services/books.api';
 
 export default function BookDetails({ route, navigation }) {
   const { slug, url } = route.params;
-
   const [book, setBook] = useState(null);
 
   function openBook() {
     navigation.navigate('Read', { url });
   }
 
-  function _serializeBook({ book }) {
-    let categories = null;
-    let themes = null;
-    let characteristics = null;
-
-    if (!url) {
-      categories = book.bookCategory.map(({ category }) => category.name);
-      themes = book.bookTheme.map(({ theme }) => theme.name);
-      characteristics = book.bookCharacteristic.map(
-        ({ characteristic }) => characteristic.name
-      );
-    } else {
-      categories = book.categories;
-      themes = book.themes;
-      characteristics = book.characteristics;
-    }
-
-    return {
-      title: book.name,
-      author: book.author,
-      sinopse: book.description,
-      image: book.imageUrlIntermediaria,
-      edition: book.edition || 'Única',
-      language: languages[book.language] || book.language,
-      publisher: book.publisher.name,
-      categories: categories.join(' - '),
-      themes: themes.join(' - '),
-      characteristics: characteristics.join(' - '),
-    };
-  }
-
   useEffect(() => {
     async function _loadBook() {
-      const { data } = await api.get(`books/${slug}`);
-      const serializedBook = _serializeBook(data);
-      setBook(serializedBook);
+      const data = await bookApi.findBook(slug);
+      setBook(data);
     }
 
     _loadBook();
+    try {
+    } catch (err) {
+      console.log('Load Book: ', err);
+    }
   }, [slug]);
 
   if (!book) return <AppLoading />;
@@ -125,15 +90,15 @@ export default function BookDetails({ route, navigation }) {
           </InfoBox>
           <InfoBox>
             <Description>Categorias:</Description>
-            <InfoText>{book.categories}</InfoText>
+            <InfoText>{book.categories.join(' - ')}</InfoText>
           </InfoBox>
           <InfoBox>
             <Description>Temáticas:</Description>
-            <InfoText>{book.themes}</InfoText>
+            <InfoText>{book.themes.join(' - ')}</InfoText>
           </InfoBox>
           <InfoBox>
             <Description>Características:</Description>
-            <InfoText>{book.characteristics}</InfoText>
+            <InfoText>{book.characteristics.join(' - ')}</InfoText>
           </InfoBox>
           <InfoEnd />
           {url && (

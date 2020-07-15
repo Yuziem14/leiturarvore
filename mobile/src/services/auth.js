@@ -10,6 +10,13 @@ export function setAuthHeader(token, clear = false) {
   api.defaults.headers.common.Authorization = value;
 }
 
+export async function register(formData, categories) {
+  const {
+    data: { id },
+  } = await api.post('auth/register', { ...formData, categories });
+  return id;
+}
+
 export async function login(email, password) {
   const {
     data: { token, refreshToken },

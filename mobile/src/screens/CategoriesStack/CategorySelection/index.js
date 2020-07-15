@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
+
 import {
   Container,
   Title,
@@ -8,7 +9,7 @@ import {
   CategoryName,
 } from '../styles';
 import Header from '../../../components/Header';
-import api from '../../../services/api';
+import * as categoriesApi from '../../../services/categories.api';
 
 export default function Categories({ navigation }) {
   const [categories, setCategories] = useState([]);
@@ -18,10 +19,17 @@ export default function Categories({ navigation }) {
   }
 
   useEffect(() => {
-    api.get('categories').then(({ data }) => {
-      setCategories(data.categories);
-    });
-  }, [categories]);
+    async function _loadCategories() {
+      const data = await categoriesApi.fetchCategories();
+      setCategories(data);
+    }
+
+    try {
+      _loadCategories();
+    } catch (err) {
+      console.log('Error when loading categories: ', err);
+    }
+  }, []);
 
   return (
     <Container>

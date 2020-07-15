@@ -14,9 +14,11 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     async function _loadStorage() {
-      const [token, user] = await AsyncStorage.multiGet([TOKEN_KEY, USER]);
+      const [token, userJson] = await AsyncStorage.multiGet([TOKEN_KEY, USER]);
+      const user = JSON.parse(userJson[1]);
+      delete user.downloads;
       authService.setAuthHeader(token[1]);
-      setUser(JSON.parse(user[1]));
+      setUser(user);
       setLoading(false);
     }
 
