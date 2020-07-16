@@ -38,7 +38,7 @@ class DownloadController {
     const book = await Book.findByOrFail('slug', slug)
     await auth.user.books().attach([book.id])
 
-    return response.json({ bookId: book.id })
+    return response.json({ ...book.toJSON() })
   }
 
   /**
