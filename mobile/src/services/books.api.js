@@ -1,24 +1,17 @@
+import { parseAsArray, first, isOne } from '../utils';
 import api from './api';
+import * as offlineService from './offline';
+
+export const API_DOWNLOADS = 'api';
+export const STORED_DOWNLOADS = 'storage';
 
 const languages = {
   por: 'Português',
   en: 'Inglês',
 };
 
-function _parseAsArray(data) {
-  return Array.isArray(data) ? data : Array(data);
-}
-
-function _isOne(data) {
-  return data.length === 1;
-}
-
-function _first(data) {
-  return data[0];
-}
-
 function _serialize(books) {
-  books = _parseAsArray(books);
+  books = parseAsArray(books);
   const serializedBooks = books.map(book => {
     if (book.book) {
       return book.book;
@@ -48,26 +41,31 @@ function _serialize(books) {
       edition: book.edition || 'Única',
       language: languages[book.language] || book.language,
       publisher: book.publisher.name,
+      url: book.bookUrl || null,
       categories: categories,
       themes: themes,
       characteristics: characteristics,
-      isDownloaded: book.isDownloaded,
+      isDownloaded: Boolean(book.isDownloaded),
+      isSerialized: true,
     };
   });
 
-  return _isOne(serializedBooks) ? _first(serializedBooks) : serializedBooks;
+  return isOne(serializedBooks) ? first(serializedBooks) : serializedBooks;
 }
 
 export async function findBook(slug) {
-  const {
-    data: { book },
-  } = await api.get(`books/${slug}`);
+  let book = await offlineService.findDownload(slug);
+
+  if (!book) {
+    const { data } = await api.get(`books/${slug}`);
+    book = data.book;
+  }
 
   return _serialize(book);
 }
 
 export async function fetchBooksByCategory(categories, page = 1) {
-  categories = _parseAsArray(categories);
+  categories = parseAsArray(categories);
 
   const responses = await Promise.all(
     categories.map(category =>
@@ -83,7 +81,7 @@ export async function fetchBooksByCategory(categories, page = 1) {
 
   const booksByCategory = responses.map(({ data }) => data);
 
-  return _isOne(booksByCategory) ? _first(booksByCategory) : booksByCategory;
+  return isOne(booksByCategory) ? first(booksByCategory) : booksByCategory;
 }
 
 export async function fetchViewedBooks() {
@@ -117,12 +115,16 @@ export async function searchBooks(searchTerm, page = 1) {
   return books;
 }
 
-export async function fetchDownloads() {
-  const {
-    data: { downloads },
-  } = await api.get('downloads');
+export async function fetchDownloads({ from = API_DOWNLOADS }) {
+  let downloads = null;
+  if (from === API_DOWNLOADS) {
+    const { data } = await api.get('downloads');
+    downloads = data.downloads;
+  } else if (from === STORED_DOWNLOADS) {
+    downloads = await offlineService.loadDownloads();
+  }
 
-  return _serialize(downloads);
+  return downloads ? downloads : [];
 }
 
 export async function addToDownloads(slug) {

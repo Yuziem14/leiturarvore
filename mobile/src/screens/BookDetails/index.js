@@ -23,29 +23,54 @@ import {
 import Header from '../../components/Header';
 import AppLoading from '../../components/AppLoading';
 import * as bookApi from '../../services/books.api';
+import { useOffline } from '../../contexts/offline';
 
 export default function BookDetails({ route, navigation }) {
   const { slug, url } = route.params;
   const [book, setBook] = useState(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const { downloadBook, removeDownload } = useOffline();
 
-  function openBook() {
-    navigation.navigate('Read', { url });
+  async function _loadBook() {
+    const data = await bookApi.findBook(slug);
+    setBook(data);
   }
 
-  useEffect(() => {
-    async function _loadBook() {
-      const data = await bookApi.findBook(slug);
-      setBook(data);
+  async function toggleDownload() {
+    if (book.isDownloaded) {
+      await removeDownload(slug);
+    } else {
+      setIsDownloading(true);
+      await downloadBook(slug);
+      setIsDownloading(false);
     }
 
     _loadBook();
+  }
+
+  function openBook() {
+    navigation.navigate('Read', { url, isDownloaded: book.isDownloaded });
+  }
+
+  useEffect(() => {
     try {
+      _loadBook();
     } catch (err) {
       console.log('Load Book: ', err);
     }
-  }, [slug]);
+  }, []);
 
   if (!book) return <AppLoading />;
+
+  let downloadText = '';
+  let icon = '';
+  if (isDownloading) {
+    icon = 'alert-triangle';
+    downloadText = '...';
+  } else {
+    icon = book.isDownloaded ? 'trash' : 'download';
+    downloadText = book.isDownloaded ? 'Remover' : 'Download';
+  }
 
   return (
     <Container>
@@ -103,13 +128,17 @@ export default function BookDetails({ route, navigation }) {
           <InfoEnd />
           {url && (
             <Actions>
-              <Button onPress={() => openBook(url)}>
+              <Button activeOpacity={0.7} onPress={() => openBook(url)}>
                 <FontAwesome5 name="readme" size={24} color="#fff" />
                 <ButtonText>Ler</ButtonText>
               </Button>
-              <Button>
-                <Feather name="download" size={24} color="#fff" />
-                <ButtonText>Download</ButtonText>
+              <Button
+                activeOpacity={0.7}
+                isDownloaded={book.isDownloaded}
+                onPress={toggleDownload}
+              >
+                <Feather name={icon} size={24} color="#fff" />
+                <ButtonText>{downloadText}</ButtonText>
               </Button>
             </Actions>
           )}

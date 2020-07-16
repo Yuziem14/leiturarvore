@@ -15,30 +15,17 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 import Header from '../../components/Header';
 import BookList from '../../components/BookList';
-import AppLoading from '../../components/AppLoading';
 
-import api from '../../services/api';
+import { useOffline } from '../../contexts/offline';
 
 export default function Offline({ navigation }) {
-  const [downloaded, setDownloaded] = useState(null);
-  const [sharing, setSharing] = useState(null);
+  const { downloads } = useOffline();
+  const [downloaded, setDownloaded] = useState(downloads);
+  const [sharing, setSharing] = useState([]);
 
   useEffect(() => {
-    async function _loadBooks() {
-      const { data } = await api.get('/books', {
-        params: {
-          filter: 'availableOffline',
-        },
-      });
-
-      setDownloaded([data.books[0]]);
-      setSharing([data.books[1]]);
-    }
-
-    _loadBooks();
-  }, []);
-
-  if (!downloaded || !sharing) return <AppLoading />;
+    setDownloaded(downloads);
+  }, [downloads]);
 
   return (
     <Container>
@@ -64,6 +51,7 @@ export default function Offline({ navigation }) {
           <BookList
             title="Seus livros baixados estão aqui..."
             books={downloaded}
+            isOffline
           >
             <Action>
               <ActionText>Compartilhar</ActionText>
@@ -77,6 +65,7 @@ export default function Offline({ navigation }) {
           <BookList
             title="Livros sendo compartilhados localmente..."
             books={sharing}
+            isOffline
           >
             <Action>
               <ActionText>Parar</ActionText>

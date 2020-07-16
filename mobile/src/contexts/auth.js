@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
     async function _loadStorage() {
       const [token, userJson] = await AsyncStorage.multiGet([TOKEN_KEY, USER]);
       const user = JSON.parse(userJson[1]);
-      delete user.downloads;
+      if (user) delete user.downloads;
       authService.setAuthHeader(token[1]);
       setUser(user);
       setLoading(false);

@@ -81,7 +81,7 @@ export const Button = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  background: ${props => props.backgroundColor || '#220066'};
+  background: ${({ isDownloaded }) => (isDownloaded ? '#666' : '#220066')};
   padding: 8px 16px;
   margin-bottom: 24px;
 `;

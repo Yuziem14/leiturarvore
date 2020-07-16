@@ -16,9 +16,11 @@ export function getPath() {
 
 export async function moveAndroidFiles() {
   const exists = await RNFS.exists(getPath());
-  if (exists) return;
 
-  await RNFS.mkdir(getPath());
+  if (!exists) {
+    await RNFS.mkdir(getPath());
+  }
+
   await Promise.all(
     files.map(file => {
       RNFS.copyFileAssets(file, `${RNFS.DocumentDirectoryPath}/${file}`);
