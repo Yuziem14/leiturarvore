@@ -39,7 +39,12 @@ export default function BookList({ title, books, children }) {
               >
                 <Book source={{ uri: book.imageUrlThumb }} />
                 {React.Children.map(children, child => (
-                  <ActionButton activeOpacity={0.8}>{child}</ActionButton>
+                  <ActionButton
+                    onPress={() => child.props.onClick(book)}
+                    activeOpacity={0.8}
+                  >
+                    {child}
+                  </ActionButton>
                 ))}
               </BookWrapper>
             </BookItem>
