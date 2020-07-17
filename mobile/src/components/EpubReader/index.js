@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { WebView } from 'react-native-webview';
-import StaticServer from 'react-native-static-server';
 
 import { EpubContainer } from './styles';
 
 import AppLoading from '../../components/AppLoading';
-import { getPath, moveAndroidFiles } from '../../services/static';
+import { startServer } from '../../services/static';
 import { useOffline } from '../../contexts/offline';
 
 const PORT = 5560;
@@ -35,16 +34,17 @@ export default function EpubReader({ sourceUri, isDownloaded }) {
     let server = null;
     let location = null;
 
-    async function startServer() {
-      await moveAndroidFiles();
-      server = new StaticServer(PORT, getPath(), { localOnly: true });
-      const serverUrl = await server.start();
+    async function init() {
+      const { server: staticServer, url } = await startServer(PORT, {
+        localOnly: true,
+      });
+      server = staticServer;
       location = await _transferFile();
       setLocalFile(location);
-      setBaseUrl(serverUrl);
+      setBaseUrl(url);
     }
 
-    startServer();
+    init();
     return () => {
       location && stopServeBook(location.uri);
       server && server.stop();

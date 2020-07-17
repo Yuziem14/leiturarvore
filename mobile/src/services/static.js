@@ -1,4 +1,6 @@
+import axios from 'axios';
 import RNFS from 'react-native-fs';
+import StaticServer from 'react-native-static-server';
 
 const files = [
   'www/index.html',
@@ -9,6 +11,26 @@ const files = [
   'www/arrow.svg',
   'www/leiturarvore-logo.png',
 ];
+
+export async function startServer(PORT, options) {
+  await moveAndroidFiles();
+  const server = new StaticServer(PORT, getPath(), options);
+  const url = await server.start();
+  return { server, url };
+}
+
+export function isRunning(url) {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(url)
+      .then(response => {
+        resolve(true);
+      })
+      .catch(err => {
+        resolve(false);
+      });
+  });
+}
 
 export function getPath() {
   return `${RNFS.DocumentDirectoryPath}/www`;
