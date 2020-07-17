@@ -8,9 +8,13 @@ import { useAuth } from './auth';
 const OfflineContext = createContext({});
 
 const IS_DOWNLOADED = '@leiturarvore:isDownloaded';
+const SHARING = '@leiturarvore:sharing';
+const SERVER_URL = '@leiturarvore:sharingServer';
 
 export function OfflineProvider({ children }) {
   const [downloads, setDownloads] = useState(null);
+  const [sharing, setSharing] = useState([]);
+  const [serverUrl, setServerUrl] = useState('');
   const { signed } = useAuth();
 
   useEffect(() => {
@@ -33,6 +37,21 @@ export function OfflineProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    async function _loadStorageData() {
+      const [storedShared, server] = await AsyncStorage.multiGet([
+        SHARING,
+        SERVER_URL,
+      ]);
+      const shared = JSON.parse(storedShared[1]);
+      const url = server[1] || '';
+      setSharing(shared);
+      setServerUrl(url);
+    }
+
+    _loadStorageData();
+  }, []);
+
+  useEffect(() => {
     async function _updateStorage() {
       if (!downloads) {
         await AsyncStorage.setItem(IS_DOWNLOADED, ''); /** '' === false */
@@ -45,6 +64,25 @@ export function OfflineProvider({ children }) {
   }, [downloads]);
 
   useEffect(() => {
+    async function _updateSharing() {
+      const newSharing =
+        typeof sharing === 'string' ? JSON.parse(sharing) : sharing;
+      await AsyncStorage.setItem(SHARING, JSON.stringify(newSharing));
+    }
+
+    _updateSharing();
+  }, [sharing]);
+
+  useEffect(() => {
+    async function _updateServerUrl() {
+      await AsyncStorage.setItem(SERVER_URL, serverUrl);
+      const store = await AsyncStorage.getItem(SERVER_URL);
+    }
+
+    _updateServerUrl();
+  }, [serverUrl]);
+
+  useEffect(() => {
     async function _init() {
       if (signed && !downloads) {
         const downloadedBooks = await bookApi.fetchDownloads({
@@ -55,6 +93,8 @@ export function OfflineProvider({ children }) {
       } else if (!signed && downloads) {
         await offlineService.clearDownloads();
         setDownloads(null);
+        setSharing([]);
+        setServerUrl('');
       }
     }
 
@@ -87,15 +127,42 @@ export function OfflineProvider({ children }) {
     await offlineService.removeFiles(origin);
   }
 
+  async function shareBook(origin, dest, slug) {
+    const { filename, uri } = await serveBook(origin, dest);
+    setSharing([
+      ...sharing,
+      { filename, uri, slug, staticPath: `sharing/${filename}` },
+    ]);
+    return { filename, uri };
+  }
+
+  async function stopShare(origin, slug) {
+    await stopServeBook(origin);
+    const shared = sharing;
+    const index = shared.findIndex(sharedBook => sharedBook.slug === slug);
+    if (index === -1) return;
+    shared.splice(index, 1);
+    setSharing([...shared]);
+  }
+
+  function updateServerUrl(url) {
+    setServerUrl(url);
+  }
+
   return (
     <OfflineContext.Provider
       value={{
         downloads,
         isDownloaded: !!downloads,
+        sharing,
+        serverUrl,
         downloadBook,
         removeDownload,
         serveBook,
         stopServeBook,
+        shareBook,
+        stopShare,
+        updateServerUrl,
       }}
     >
       {children}
