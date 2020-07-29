@@ -104,6 +104,15 @@ export default function Offline({ navigation }) {
     await stopShare(uri, slug);
   }
 
+  async function showInfo(book) {
+    console.log(server.url);
+    navigation.navigate('SharedInfo', {
+      value: `leiturarvore://read/${encodeURIComponent(
+        `${serverUrl}/sharing/${book.filename}`
+      )}`,
+    });
+  }
+
   return (
     <Container>
       <Header>
@@ -154,7 +163,7 @@ export default function Offline({ navigation }) {
               <ActionText>Parar</ActionText>
               <MaterialCommunityIcons name="stop" color="#fff" size={16} />
             </Action>
-            <Action>
+            <Action onClick={showInfo}>
               <ActionText>Mostrar</ActionText>
               <MaterialCommunityIcons
                 name="qrcode-scan"
