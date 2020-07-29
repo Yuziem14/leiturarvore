@@ -5,7 +5,21 @@ import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
 import AppLoading from '../components/AppLoading';
 
-export default function Routes() {
+export const linking = {
+  prefixes: ['http://leiturarvore.com', 'leiturarvore://'],
+  config: {
+    screens: {
+      Read: {
+        path: 'read/:url',
+        parse: {
+          url: url => decodeURIComponent(url),
+        },
+      },
+    },
+  },
+};
+
+export function Routes() {
   const { signed, loading } = useAuth();
 
   if (loading) {
@@ -14,3 +28,5 @@ export default function Routes() {
 
   return signed ? <AppRoutes /> : <AuthRoutes />;
 }
+
+export default Routes;
