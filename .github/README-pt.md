@@ -10,6 +10,12 @@
 
 ---
 
+<p align="center">
+  <img src="./mockup-share-feature.gif?raw=true" alt="Feature: Share Book - LeiturArvore">
+</p>
+
+---
+
 <p align="center"><a href="https://insomnia.rest/run/?label=Leitur%C3%81rvore&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fmegahack3-62%2Fleiturarvore%2Fdevelop%2F.github%2Fapi-insomnia.json" target="_blank"><img src="https://insomnia.rest/images/run.svg" alt="Run in Insomnia"></a></p>
 
 ---
@@ -18,6 +24,7 @@
 
 # :pushpin: Tabela de Conteúdos
 - [Funcionalidades](#bulb-funcionalidades)
+- [Conceito de Compartilhamento](#dart-conceito-de-compartilhamento)
 - [Requisitos](#construction-requisitos)
 - [Instalação](#white_check_mark-instalação)
 - [Iniciando o projeto](#rocket-iniciando-o-projeto)
@@ -33,11 +40,23 @@
 - [X] :coffee: Feed Personalizado
 - [X] :cloud: Modo Offline
 
+# :dart: Conceito de Compartilhamento
+Nessa seção tentaremos explicar como é possível compartilhar um livro no app sem estar conectado a internet.
+
+Para que isso seja possível, uma pessoa precisa ao estar conectada á internet baixar o livro previamente.
+
+A fim de compartilhar o livro já baixado é necessário estar conectado á uma rede local privada. Dessa forma, ao compartilha um livro o arquivo é transferido para a área de compartilhamento e um servidor HTTP estático é criado fazendo com que aquele dispositivo se torne o principal servidor daquele livro.
+
+Veja o diagrama abaixo:
+
+![Share Diagram](./share-diagram.png)
+
 # :construction: Requisitos
 - [X] Git
 - [X] Node.js
 - [X] AdonisJS CLI
-- [X] Expo CLI
+- [X] React Native CLI
+- [X] <s>Expo CLI</s>
 
 # :white_check_mark: Instalação
 Primeiramente confira se você possui todos requisitos acima e então clone este repositório:
@@ -63,7 +82,12 @@ _Obs: Realize o clone via SSH somenete se você possuir uma chave SSH_
   Execute `cd mobile` para entrar no diretório mobile, em seguida:
     - Execute `npm install` para instalar as dependências.
     - Execute `cp .env.example env.js` para copiar o arquivo de variáveis de ambiente e em seguida faça as devidas configurações adicionando o IP e a Porta do seu servidor HTTP.
-    - Execute `expo start` para iniciar o app.
+    - Execute `npm run android` para iniciar o app no android.
+    - Execute `npm run start` para iniciar o package bundle do react native.
+
+## :warning: O App foi ejetado do Expo. Você ainda pode executar via Expo CLI mas não é recomendado, ele pode conter alguns bugs inesperados.
+
+### :warning: O App não foi testado no IOS. Ele pode conter alguns bugs inesperados.
 
 _Obs: Caso queira, utilize o `yarn` invés do `npm`._
 
@@ -71,7 +95,7 @@ _Obs: Caso queira, utilize o `yarn` invés do `npm`._
 O projeto foi construído com:
 
 - [Node.js](https://nodejs.org/en/) + [Adonis.js](http://adonisjs.com/)
-- [React Native](https://reactnative.dev/) + [Expo](https://expo.io/)
+- [React Native](https://reactnative.dev/) <s>+ [Expo](https://expo.io/)</s>
 - [PostgreSQL](https://www.postgresql.org/)
 
 _Obs: Caso queira mais praticidade, utilize um banco SQLite._
