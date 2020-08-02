@@ -5,12 +5,15 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import Header from '../../components/Header';
 import BookList from '../../components/BookList';
+import OfflineMessage from '../../components/OfflineMessage';
 
 import * as bookApi from '../../services/books.api';
 import { useAuth } from '../../contexts/auth';
+import { useOffline } from '../../contexts/offline';
 
 export default function Home() {
   const { user } = useAuth();
+  const { connection } = useOffline();
   const [books, setBooks] = useState(null);
 
   useEffect(() => {
@@ -37,11 +40,11 @@ export default function Home() {
       setBooks(sectionBooks);
     }
     try {
-      _loadBooks();
+      if (connection.isInternetReachable) _loadBooks();
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }, [connection.isInternetReachable]);
 
   return (
     <Container>
@@ -57,16 +60,20 @@ export default function Home() {
         </Search>
       </Header>
       <BooksContainer>
-        <ScrollView>
-          {books &&
-            books.map((bookSection, index) => (
-              <BookList
-                key={index}
-                title={bookSection.title}
-                books={bookSection.books}
-              />
-            ))}
-        </ScrollView>
+        {!connection.isInternetReachable ? (
+          <OfflineMessage />
+        ) : (
+          <ScrollView>
+            {books &&
+              books.map((bookSection, index) => (
+                <BookList
+                  key={index}
+                  title={bookSection.title}
+                  books={bookSection.books}
+                />
+              ))}
+          </ScrollView>
+        )}
       </BooksContainer>
     </Container>
   );

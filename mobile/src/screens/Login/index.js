@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Alert } from 'react-native';
 import {
   Container,
   Logo,
@@ -11,6 +12,7 @@ import {
   TextButton,
 } from './styles';
 import { useAuth } from '../../contexts/auth';
+import { useOffline } from '../../contexts/offline';
 
 import logo from '../../assets/logo.png';
 
@@ -18,6 +20,7 @@ export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { signIn } = useAuth();
+  const { connection } = useOffline();
 
   function handleEmailChange(value) {
     setEmail(value);
@@ -28,11 +31,24 @@ export default function Login({ navigation }) {
   }
 
   function handleRegister() {
+    if (!connection.isInternetReachable) {
+      return Alert.alert(
+        'Ooops...',
+        'Por favor, conecte-se a internet para prosseguir!'
+      );
+    }
+
     navigation.navigate('RegisterForm');
   }
 
   function handleSignIn() {
-    signIn(email, password).catch(err => console.log(err));
+    if (!connection.isInternetReachable) {
+      return Alert.alert('Ooops...', 'Por favor, conecte-se a internet!');
+    }
+
+    signIn(email, password).catch(err =>
+      Alert.alert('Ooops...', 'Credenciais não encontradas!')
+    );
   }
 
   return (

@@ -8,10 +8,14 @@ import {
   CategoryContainer,
   CategoryName,
 } from '../styles';
+
 import Header from '../../../components/Header';
+import OfflineMessage from '../../../components/OfflineMessage';
 import * as categoriesApi from '../../../services/categories.api';
+import { useOffline } from '../../../contexts/offline';
 
 export default function Categories({ navigation }) {
+  const { connection } = useOffline();
   const [categories, setCategories] = useState([]);
 
   function handleSelectedCategory(category) {
@@ -25,11 +29,11 @@ export default function Categories({ navigation }) {
     }
 
     try {
-      _loadCategories();
+      if (!connection.isInternetReachable) _loadCategories();
     } catch (err) {
       console.log('Error when loading categories: ', err);
     }
-  }, []);
+  }, [connection.isInternetReachable]);
 
   return (
     <Container>
@@ -37,20 +41,24 @@ export default function Categories({ navigation }) {
         <Title>Categorias</Title>
       </Header>
       <Main>
-        <FlatList
-          data={categories}
-          showsVerticalScrollIndicator={false}
-          numColumns={2}
-          renderItem={({ item }) => (
-            <CategoryContainer
-              activeOpacity={0.8}
-              onPress={() => handleSelectedCategory(item)}
-            >
-              <CategoryName>{item.name}</CategoryName>
-            </CategoryContainer>
-          )}
-          keyExtractor={category => String(category.slug)}
-        />
+        {!connection.isInternetReachable ? (
+          <OfflineMessage />
+        ) : (
+          <FlatList
+            data={categories}
+            showsVerticalScrollIndicator={false}
+            numColumns={2}
+            renderItem={({ item }) => (
+              <CategoryContainer
+                activeOpacity={0.8}
+                onPress={() => handleSelectedCategory(item)}
+              >
+                <CategoryName>{item.name}</CategoryName>
+              </CategoryContainer>
+            )}
+            keyExtractor={category => String(category.slug)}
+          />
+        )}
       </Main>
     </Container>
   );

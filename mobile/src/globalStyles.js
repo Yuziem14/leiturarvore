@@ -62,3 +62,12 @@ export const Button = styled.TouchableOpacity`
   justify-content: center;
   padding-right: 8px;
 `;
+
+export const SyncDataText = styled.Text`
+  align-self: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #f4f4f4;
+  text-align: center;
+  padding: 16px;
+`;

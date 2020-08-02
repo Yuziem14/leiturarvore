@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
 import { AsyncStorage } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 
 import * as offlineService from '../services/offline';
 import * as bookApi from '../services/books.api';
@@ -8,14 +9,26 @@ import { useAuth } from './auth';
 const OfflineContext = createContext({});
 
 const IS_DOWNLOADED = '@leiturarvore:isDownloaded';
-const SHARING = '@leiturarvore:sharing';
-const SERVER_URL = '@leiturarvore:sharingServer';
 
 export function OfflineProvider({ children }) {
+  const [loading, setLoading] = useState(true);
   const [downloads, setDownloads] = useState(null);
   const [sharing, setSharing] = useState([]);
   const [serverUrl, setServerUrl] = useState('');
+  const [connection, setConnection] = useState({});
   const { signed } = useAuth();
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(
+      ({ isConnected, isInternetReachable }) => {
+        setConnection({ isConnected, isInternetReachable });
+      }
+    );
+
+    return function () {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     async function _loadStorage() {
@@ -37,26 +50,13 @@ export function OfflineProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    async function _loadStorageData() {
-      const [storedShared, server] = await AsyncStorage.multiGet([
-        SHARING,
-        SERVER_URL,
-      ]);
-      const shared = JSON.parse(storedShared[1]);
-      const url = server[1] || '';
-      setSharing(shared);
-      setServerUrl(url);
-    }
-
-    _loadStorageData();
-  }, []);
-
-  useEffect(() => {
     async function _updateStorage() {
       if (!downloads) {
         await AsyncStorage.setItem(IS_DOWNLOADED, ''); /** '' === false */
+        setLoading(true);
       } else {
         await AsyncStorage.setItem(IS_DOWNLOADED, 'true');
+        setLoading(false);
       }
     }
 
@@ -64,27 +64,8 @@ export function OfflineProvider({ children }) {
   }, [downloads]);
 
   useEffect(() => {
-    async function _updateSharing() {
-      const newSharing =
-        typeof sharing === 'string' ? JSON.parse(sharing) : sharing;
-      await AsyncStorage.setItem(SHARING, JSON.stringify(newSharing));
-    }
-
-    _updateSharing();
-  }, [sharing]);
-
-  useEffect(() => {
-    async function _updateServerUrl() {
-      await AsyncStorage.setItem(SERVER_URL, serverUrl);
-      const store = await AsyncStorage.getItem(SERVER_URL);
-    }
-
-    _updateServerUrl();
-  }, [serverUrl]);
-
-  useEffect(() => {
     async function _init() {
-      if (signed && !downloads) {
+      if (signed && !downloads && connection.isInternetReachable) {
         const downloadedBooks = await bookApi.fetchDownloads({
           from: bookApi.API_DOWNLOADS,
         });
@@ -128,6 +109,9 @@ export function OfflineProvider({ children }) {
   }
 
   async function shareBook(origin, dest, slug) {
+    const isSharing = sharing.find(book => book.slug === slug);
+    if (isSharing) return;
+
     const { filename, uri } = await serveBook(origin, dest);
     setSharing([
       ...sharing,
@@ -152,6 +136,8 @@ export function OfflineProvider({ children }) {
   return (
     <OfflineContext.Provider
       value={{
+        loading,
+        connection,
         downloads,
         isDownloaded: !!downloads,
         sharing,

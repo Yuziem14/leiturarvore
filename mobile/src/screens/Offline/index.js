@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Alert } from 'react-native';
 import {
   Container,
   Main,
@@ -26,6 +26,7 @@ export default function Offline({ navigation }) {
     downloads,
     sharing: shared,
     serverUrl,
+    connection,
     updateServerUrl,
     shareBook,
     stopShare,
@@ -35,8 +36,11 @@ export default function Offline({ navigation }) {
   const [server, setServer] = useState(null);
 
   useEffect(() => {
+    if (!connection.isConnected && server) toggleSession();
+  }, [connection.isConnected]);
+
+  useEffect(() => {
     async function _init() {
-      await refreshSession();
       setDownloaded(downloads);
     }
 
@@ -76,13 +80,13 @@ export default function Offline({ navigation }) {
     );
   }
 
-  async function refreshSession() {
-    if (!serverUrl) return;
-    const { server: staticServer, url } = await _startServer();
-    setServer({ staticServer, url });
-  }
-
   async function toggleSession() {
+    if (!connection.isConnected && !server)
+      return Alert.alert(
+        'Ooops...',
+        'Por favor, conecte-se em uma rede para poder compartilhar!'
+      );
+
     if (!server) {
       const { server: staticServer, url } = await _startServer();
       setServer({ staticServer, url });
@@ -95,8 +99,13 @@ export default function Offline({ navigation }) {
   }
 
   async function share({ bookUrl, slug }) {
+    if (!server)
+      return Alert.alert(
+        'Ooops...',
+        'Inicie uma sessão para compartilhar esse livro!'
+      );
+
     const shared = await shareBook(bookUrl, 'www/sharing', slug);
-    console.log(shared);
   }
 
   async function stop({ slug }) {
